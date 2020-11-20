@@ -6,7 +6,14 @@
  */
 
 import {REACT_FORWARD_REF_TYPE, REACT_MEMO_TYPE} from 'shared/ReactSymbols';
+import { createElement } from './ReactElement';
 
+/**
+ * 转发ref
+ * 改了类型，render中带上了ref参数
+ * 应该是render函数去处理这个差异和转发
+ * @param {*} render 
+ */
 export function forwardRef<Props, ElementType: React$ElementType>(
   render: (props: Props, ref: React$Ref<ElementType>) => React$Node,
 ) {
@@ -45,7 +52,9 @@ export function forwardRef<Props, ElementType: React$ElementType>(
 
   const elementType = {
     $$typeof: REACT_FORWARD_REF_TYPE,
-    render,
+    render:()=>{
+      createElement()
+    },
   };
   if (__DEV__) {
     let ownName;

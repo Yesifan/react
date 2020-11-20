@@ -14,6 +14,7 @@ export function createRef(): RefObject {
     current: null,
   };
   if (__DEV__) {
+    // 冻结
     Object.seal(refObject);
   }
   return refObject;

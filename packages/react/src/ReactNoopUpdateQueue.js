@@ -31,6 +31,7 @@ function warnNoop(publicInstance, callerName) {
 
 /**
  * This is the abstract API for an update queue.
+ * 更新队列 定义结构的空对象
  */
 const ReactNoopUpdateQueue = {
   /**

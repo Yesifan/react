@@ -50,6 +50,8 @@ export function createContext<T>(
     Consumer: (null: any),
   };
 
+  // Provider包装为一个ReactElement
+  // 叫个Render去解析
   context.Provider = {
     $$typeof: REACT_PROVIDER_TYPE,
     _context: context,
