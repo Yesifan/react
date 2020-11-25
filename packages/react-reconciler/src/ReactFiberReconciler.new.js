@@ -341,8 +341,14 @@ export function getPublicRootInstance(
   if (!containerFiber.child) {
     return null;
   }
+  // 我在developerment版本中添加上这一句不影响使用
+  // return containerFiber.child.stateNode;
   switch (containerFiber.child.tag) {
     case HostComponent:
+      // 在developerment版本中
+      // function getPublicInstance(instance) {
+      //   return instance;
+      // }
       return getPublicInstance(containerFiber.child.stateNode);
     default:
       return containerFiber.child.stateNode;

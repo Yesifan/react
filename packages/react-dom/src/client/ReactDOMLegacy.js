@@ -189,6 +189,17 @@ function legacyRenderSubtreeIntoContainer(
   let root: RootType = (container._reactRootContainer: any);
   let fiberRoot;
   if (!root) {
+    /**
+     * @LEARN_TIPS
+     * 先是执行 createLegacyRoot 返回一个实例化的 ReactDOMBlockingRoot
+     * 最终执行的方法是 ReactFiberRoot.js/createFiberRoot
+     * createFiberRoot(container, LegacyRoot)
+     * this._internalRoot = root // root挂载到了_internalRoot
+     * root:FiberRoot = new FiberRootNode() 
+     * root.current:Fiber = new FiberNode() 
+     * 并初始化更新栈
+     * initializeUpdateQueue(root.current);
+     */
     // Initial mount
     root = container._reactRootContainer = legacyCreateRootFromDOMContainer(
       container,

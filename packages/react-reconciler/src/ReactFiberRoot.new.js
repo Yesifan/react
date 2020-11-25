@@ -93,10 +93,11 @@ export function createFiberRoot(
 
   // Cyclic construction. This cheats the type system right now because
   // stateNode is any.
+  // new FiberNode()
   const uninitializedFiber = createHostRootFiber(tag);
   root.current = uninitializedFiber;
   uninitializedFiber.stateNode = root;
-
+  // 初始化更新栈
   initializeUpdateQueue(uninitializedFiber);
 
   return root;
