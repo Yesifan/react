@@ -172,10 +172,11 @@ function warnOnInvalidCallback(callback: mixed, callerName: string): void {
   }
 }
 
+// @LEARN_TIP legacyRenderSubtreeIntoContainer
 function legacyRenderSubtreeIntoContainer(
   parentComponent: ?React$Component<any, any>,
-  children: ReactNodeList,
-  container: Container,
+  children: ReactNodeList, // <App/>
+  container: Container, // 容器
   forceHydrate: boolean,
   callback: ?Function,
 ) {
@@ -190,7 +191,6 @@ function legacyRenderSubtreeIntoContainer(
   let fiberRoot;
   if (!root) {
     /**
-     * @LEARN_TIPS
      * 先是执行 createLegacyRoot 返回一个实例化的 ReactDOMBlockingRoot
      * 最终执行的方法是 ReactFiberRoot.js/createFiberRoot
      * createFiberRoot(container, LegacyRoot)
@@ -213,6 +213,7 @@ function legacyRenderSubtreeIntoContainer(
         originalCallback.call(instance);
       };
     }
+    // 更改执行上下文
     // Initial mount should not be batched.
     unbatchedUpdates(() => {
       updateContainer(children, fiberRoot, parentComponent, callback);
@@ -238,7 +239,7 @@ export function findDOMNode(
   if (__DEV__) {
     const owner = (ReactCurrentOwner.current: any);
     if (owner !== null && owner.stateNode !== null) {
-      const warnedAboutRefsInRender = owner.stateNode._warnedAboutRefsInRender;
+      const warnedAboutRefsInRender = owner.st·ateNode._warnedAboutRefsInRender;
       if (!warnedAboutRefsInRender) {
         console.error(
           '%s is accessing findDOMNode inside its render(). ' +
@@ -295,6 +296,7 @@ export function hydrate(
   );
 }
 
+// @LEARN_TAG render
 export function render(
   element: React$Element<any>,
   container: Container,

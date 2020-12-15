@@ -2988,6 +2988,10 @@ function remountFiber(
   }
 }
 
+/**
+ * @LEARN_TIP beginWork
+ * 
+ */
 function beginWork(
   current: Fiber | null,
   workInProgress: Fiber,

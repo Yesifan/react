@@ -247,6 +247,7 @@ export function createContainer(
   return createFiberRoot(containerInfo, tag, hydrate, hydrationCallbacks);
 }
 
+// @LEARN_TIP updateContainer
 export function updateContainer(
   element: ReactNodeList,
   container: OpaqueRoot,
@@ -256,7 +257,9 @@ export function updateContainer(
   if (__DEV__) {
     onScheduleRoot(container, element);
   }
+  // current指向的是RootFiber(Fiber树的根节点)
   const current = container.current;
+  // 创建update的当前时间
   const eventTime = requestEventTime();
   if (__DEV__) {
     // $FlowExpectedError - jest isn't a global, and isn't recognized outside of tests
@@ -265,12 +268,14 @@ export function updateContainer(
       warnIfNotScopedWithMatchingAct(current);
     }
   }
+  // 1. 计算lane 优先级
   const lane = requestUpdateLane(current);
 
   if (enableSchedulingProfiler) {
     markRenderScheduled(lane);
   }
-
+  // 2. 设置FiberRoot.context
+  // 拿到当前的context, 首次执行返回一个emptyContext, 是一个{}
   const context = getContextForSubtree(parentComponent);
   if (container.context === null) {
     container.context = context;
@@ -295,9 +300,12 @@ export function updateContainer(
     }
   }
 
+  // 3. 初始化current(HostRootFiber)对象的updateQueue队列
+  // 3.1 创建一个更新(update)对象
   const update = createUpdate(eventTime, lane);
   // Caution: React DevTools currently depends on this property
   // being called "element".
+  // 3.2 设置update对象的payload, 这里element需要注意(是tag=HostRoot特有的设置, 指向<App/>)
   update.payload = {element};
 
   callback = callback === undefined ? null : callback;
@@ -313,8 +321,10 @@ export function updateContainer(
     }
     update.callback = callback;
   }
-
+  // 3.3 将update对象加入到当前Fiber(这里是RootFiber)的更新对列当中
   enqueueUpdate(current, update);
+
+  //4. 调度和更新current(HostRootFiber)对象
   scheduleUpdateOnFiber(current, lane, eventTime);
 
   return lane;
