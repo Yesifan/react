@@ -239,7 +239,7 @@ export function findDOMNode(
   if (__DEV__) {
     const owner = (ReactCurrentOwner.current: any);
     if (owner !== null && owner.stateNode !== null) {
-      const warnedAboutRefsInRender = owner.st·ateNode._warnedAboutRefsInRender;
+      const warnedAboutRefsInRender = owner.stateNode._warnedAboutRefsInRender;
       if (!warnedAboutRefsInRender) {
         console.error(
           '%s is accessing findDOMNode inside its render(). ' +
