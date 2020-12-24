@@ -233,7 +233,7 @@ const {
 type ExecutionContext = number;
 
 /**
- * @LEARN_TIP context
+ * @LEARN_VAL context
  * 0b000000 NoContext：空状态，作为初始值，可用于推断调用栈是否回到底部、或者推断 executionContext 处于那种状态
  * 0b000001 BatchedContext：批量执行更新任务，如调用 batchedUpdates 更新时。
  * 0b000010 EventContext：执行更新任务，如调用 batchedEventUpdates 更新时。
@@ -502,7 +502,7 @@ function requestRetryLane(fiber: Fiber) {
   return findRetryLane(currentEventWipLanes);
 }
 
-// @LEARN_TIP scheduleUpdateOnFiber
+// @LEARN_FUNC scheduleUpdateOnFiber
 export function scheduleUpdateOnFiber(
   fiber: Fiber,
   lane: Lane,
@@ -521,7 +521,7 @@ export function scheduleUpdateOnFiber(
   // Mark that the root has a pending update.
   markRootUpdated(root, lane, eventTime);
 
-  if (root === workInProgressRoot) {
+  if (root === workInProgressRoot) {// 第一次render的时候workInProgressRoot = null
     // Received an update to a tree that's in the middle of rendering. Mark
     // that there was an interleaved update work on this root. Unless the
     // `deferRenderPhaseUpdateToNextBatch` flag is off and this is a render
@@ -550,7 +550,7 @@ export function scheduleUpdateOnFiber(
   // TODO: requestUpdateLanePriority also reads the priority. Pass the
   // priority as an argument to that function and this one.
   const priorityLevel = getCurrentPriorityLevel();
-
+  // executionContext = LegacyUnbatchedContext 0b0001000
   if (lane === SyncLane) {
     if (
       // Check if we're inside unbatchedUpdates
@@ -656,7 +656,7 @@ function markUpdateLaneFromFiberToRoot(
     return null;
   }
 }
-// @LEARN_TIP ensureRootIsScheduled
+// @LEARN_FUNC ensureRootIsScheduled
 // Use this function to schedule a task for a root. There's only one task per
 // root; if a task was already scheduled, we'll check to make sure the priority
 // of the existing task is the same as the priority of the next level that the
@@ -951,7 +951,7 @@ function markRootSuspended(root, suspendedLanes) {
   markRootSuspended_dontCallThisOneDirectly(root, suspendedLanes);
 }
 
-// @LEARN_TIP performSyncWorkOnRoot
+// @LEARN_FUNC performSyncWorkOnRoot
 // This is the entry point for synchronous tasks that don't go
 // through Scheduler
 function performSyncWorkOnRoot(root) {
@@ -969,13 +969,11 @@ function performSyncWorkOnRoot(root) {
   let lanes;
   let exitStatus;
   if (
-    root === workInProgressRoot &&
+    root === workInProgressRoot && // 第一次运行到这里到时候 workInProgressRoot 位null
     includesSomeLane(root.expiredLanes, workInProgressRootRenderLanes)
   ) {
     // There's a partial tree, and at least one of its lanes has expired. Finish
     // rendering it before rendering the rest of the expired work.
-    // 1. render阶段
-    // 1.1 传入FiberRoot对象, 执行同步render
     lanes = workInProgressRootRenderLanes;
     exitStatus = renderRootSync(root, lanes);
     if (
@@ -996,6 +994,8 @@ function performSyncWorkOnRoot(root) {
       exitStatus = renderRootSync(root, lanes);
     }
   } else {
+    // 1. render阶段
+    // 1.1 传入FiberRoot对象, 执行同步render
     lanes = getNextLanes(root, NoLanes);
     exitStatus = renderRootSync(root, lanes);
   }
@@ -1499,9 +1499,9 @@ export function renderHasNotSuspendedYet(): boolean {
   // so those are false.
   return workInProgressRootExitStatus === RootIncomplete;
 }
-// @LEARN_TIP renderRootSync
+// @LEARN_FUNC renderRootSync
 function renderRootSync(root: FiberRoot, lanes: Lanes) {
-  const prevExecutionContext = executionContext;
+  const prevExecutionContext = executionContext;// 缓存executionContext
   // 1. 位运算, 更新executionContext
   executionContext |= RenderContext;
   const prevDispatcher = pushDispatcher();
@@ -2112,7 +2112,7 @@ function commitRootImpl(root, renderPriorityLevel) {
 
   return null;
 }
-
+// @LEARN_FUNC flushPassiveEffects
 export function flushPassiveEffects(): boolean {
   // Returns whether passive effects were flushed.
   if (pendingPassiveEffectsRenderPriority !== NoSchedulerPriority) {

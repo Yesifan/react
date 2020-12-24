@@ -110,6 +110,7 @@ if (__DEV__) {
 
 let debugCounter = 1;
 
+//@LEARN_CLASS FiberNode
 function FiberNode(
   tag: WorkTag,
   pendingProps: mixed,
@@ -124,9 +125,9 @@ function FiberNode(
   this.stateNode = null;
 
   // Fiber
-  this.return = null;
-  this.child = null;
-  this.sibling = null;
+  this.return = null; // 指向当前节点的父元素
+  this.child = null; // 指向当前节点的第一个子元素
+  this.sibling = null; // 指向同级的下一个兄弟节点
   this.index = 0;
 
   this.ref = null;

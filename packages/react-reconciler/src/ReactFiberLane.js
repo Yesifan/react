@@ -248,7 +248,7 @@ export function lanePriorityToSchedulerPriority(
 
 export function getNextLanes(root: FiberRoot, wipLanes: Lanes): Lanes {
   // Early bailout if there's no pending work left.
-  const pendingLanes = root.pendingLanes;
+  const pendingLanes = root.pendingLanes;// 1
   if (pendingLanes === NoLanes) {
     return_highestLanePriority = NoLanePriority;
     return NoLanes;
@@ -270,10 +270,10 @@ export function getNextLanes(root: FiberRoot, wipLanes: Lanes): Lanes {
     // even if the work is suspended.
     const nonIdlePendingLanes = pendingLanes & NonIdleLanes;
     if (nonIdlePendingLanes !== NoLanes) {
-      const nonIdleUnblockedLanes = nonIdlePendingLanes & ~suspendedLanes;
+      const nonIdleUnblockedLanes = nonIdlePendingLanes & ~suspendedLanes; // 1
       if (nonIdleUnblockedLanes !== NoLanes) {
-        nextLanes = getHighestPriorityLanes(nonIdleUnblockedLanes);
-        nextLanePriority = return_highestLanePriority;
+        nextLanes = getHighestPriorityLanes(nonIdleUnblockedLanes);// SyncLane
+        nextLanePriority = return_highestLanePriority;// SyncLanePriority
       } else {
         const nonIdlePingedLanes = nonIdlePendingLanes & pingedLanes;
         if (nonIdlePingedLanes !== NoLanes) {
@@ -585,6 +585,7 @@ function getLowestPriorityLane(lanes: Lanes): Lane {
   return index < 0 ? NoLanes : 1 << index;
 }
 
+// 从左边的1开始到右边结束 全设为1
 function getEqualOrHigherPriorityLanes(lanes: Lanes | Lane): Lanes {
   return (getLowestPriorityLane(lanes) << 1) - 1;
 }
