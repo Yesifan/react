@@ -2989,7 +2989,7 @@ function remountFiber(
 }
 
 /**
- * @LEARN_TIP beginWork
+ * @LEARN_FUNC beginWork
  * 
  */
 function beginWork(

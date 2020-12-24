@@ -247,7 +247,7 @@ export function createContainer(
   return createFiberRoot(containerInfo, tag, hydrate, hydrationCallbacks);
 }
 
-// @LEARN_TIP updateContainer
+// @LEARN_FUNC updateContainer
 export function updateContainer(
   element: ReactNodeList,
   container: OpaqueRoot,
@@ -269,7 +269,7 @@ export function updateContainer(
     }
   }
   // 1. 计算lane 优先级
-  const lane = requestUpdateLane(current);
+  const lane = requestUpdateLane(current); // syncLane 0b0001
 
   if (enableSchedulingProfiler) {
     markRenderScheduled(lane);

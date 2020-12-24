@@ -172,7 +172,8 @@ function warnOnInvalidCallback(callback: mixed, callerName: string): void {
   }
 }
 
-// @LEARN_TIP legacyRenderSubtreeIntoContainer
+// @LEARN_FUNC legacyRenderSubtreeIntoContainer
+// legacy render入口
 function legacyRenderSubtreeIntoContainer(
   parentComponent: ?React$Component<any, any>,
   children: ReactNodeList, // <App/>
@@ -193,12 +194,10 @@ function legacyRenderSubtreeIntoContainer(
     /**
      * 先是执行 createLegacyRoot 返回一个实例化的 ReactDOMBlockingRoot
      * 最终执行的方法是 ReactFiberRoot.js/createFiberRoot
-     * createFiberRoot(container, LegacyRoot)
-     * this._internalRoot = root // root挂载到了_internalRoot
-     * root:FiberRoot = new FiberRootNode() 
-     * root.current:Fiber = new FiberNode() 
-     * 并初始化更新栈
-     * initializeUpdateQueue(root.current);
+     * root = createFiberRoot(container, LegacyRoot)
+     * fiberRoot<FiberRoot>
+     * fiberRoot.current<Fiber>
+     * fiberRoot.current.stateNode = fiberRoot
      */
     // Initial mount
     root = container._reactRootContainer = legacyCreateRootFromDOMContainer(
@@ -296,7 +295,7 @@ export function hydrate(
   );
 }
 
-// @LEARN_TAG render
+// @LEARN_FUNC render
 export function render(
   element: React$Element<any>,
   container: Container,
